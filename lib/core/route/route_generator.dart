@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petadoption/core/route/routes.dart';
 import 'package:petadoption/model/animal_model.dart';
+import 'package:petadoption/view/history/history_page.dart';
 import 'package:petadoption/view/home/home_page.dart';
 
 import '../../view/datail/detail_page.dart';
@@ -18,6 +19,9 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const HomePage());
     case Routes.detailPage:
       return MaterialPageRoute(builder: (_) =>  DetailPage(animalModel: settings.arguments as AnimalModel,));
+
+    case Routes.historyPage:
+      return MaterialPageRoute(builder: (_) => const HistoryPage());
     default:
       return MaterialPageRoute(
           builder: (_) =>

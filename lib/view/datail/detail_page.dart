@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petadoption/model/animal_model.dart';
 import 'package:petadoption/utils/text_style_helper.dart';
 
+import '../history/bloc/history_bloc.dart';
 import '../home/bloc/home_bloc.dart';
 
 class DetailPage extends StatefulWidget {
@@ -75,10 +76,27 @@ class _DetailPageState extends State<DetailPage> {
             padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 12),
             child: InkWell(
               onTap: (){
-                setState(() {
-                  model = model.updateSoldStatus(!model.isSold);
-                });
-                BlocProvider.of<HomeBloc>(context).add(HomeEventAdoptAnimal(id: model.id, status: model.isSold));
+                if(!model.isSold){
+                  setState(() {
+                    model = model.updateSoldStatus(!model.isSold);
+                  });
+
+                  BlocProvider.of<HomeBloc>(context).add(HomeEventAdoptAnimal(id: model.id, status: model.isSold));
+
+                  BlocProvider.of<HistoryBloc>(context).add(HistoryEventAddAnimal(animalModel: model));
+                  showDialog(context: context, builder: (context){
+                    return AlertDialog(
+                      title: Text('Congratulations! You have adopted ${model.name}. Please check history section for adopted list.'),
+                      titleTextStyle: appTextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.black),
+                      actions: [
+                        TextButton(onPressed: (){
+                          Navigator.pop(context);
+                        }, child: Text('Ok',style: appTextStyle(fontWeight: FontWeight.bold, fontSize: 12,color: Colors.teal),))
+                      ],
+                    );
+                  });
+                }
+
               },
               child: Container(
                 width: size.width,
@@ -89,7 +107,7 @@ class _DetailPageState extends State<DetailPage> {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  model.isSold ? 'Release me' : 'Adopt me',
+                  model.isSold ? 'Already adopted' : 'Adopt me',
                   style: appTextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 18,
@@ -98,7 +116,7 @@ class _DetailPageState extends State<DetailPage> {
               ),
             ),
           ),
-          Text('Price: \$${model.price}',
+          Text('Price: INR ${model.price}',
             style: appTextStyle(fontWeight: FontWeight.w500, fontSize: 12),),
           const SizedBox(height: 8,),
           Text('Distance: ${model.distance} km',

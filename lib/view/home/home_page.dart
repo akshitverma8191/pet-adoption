@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:petadoption/core/route/routes.dart';
+import 'package:petadoption/view/history/bloc/history_bloc.dart';
 import 'package:petadoption/view/home/bloc/home_bloc.dart';
 
 import '../../model/animal_model.dart';
@@ -88,7 +89,9 @@ class _HomePageState extends State<HomePage> {
               style: appTextStyle(fontWeight: FontWeight.bold, fontSize: 24),)
           ],
         ),
-        IconButton(onPressed: () {}, icon: Icon(Icons.history))
+        IconButton(onPressed: () {
+          Navigator.pushNamed(context, Routes.historyPage);
+        }, icon: const  Icon(Icons.history))
       ],
     );
   }
@@ -151,14 +154,29 @@ class _HomePageState extends State<HomePage> {
                     Text(animalmodel.name,
                       style: appTextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
                     const SizedBox(height: 8,),
-                    Text('Price: \$${animalmodel.price}',
+                    Text('Price: INR ${animalmodel.price}',
                       style: appTextStyle(fontWeight: FontWeight.w500, fontSize: 12),),
                     const SizedBox(height: 8,),
                     Text('Distance: ${animalmodel.distance} km',
                       style: appTextStyle(fontWeight: FontWeight.w500, fontSize: 12),),
 
                     InkWell(onTap: (){
-                      BlocProvider.of<HomeBloc>(context).add(HomeEventAdoptAnimal(id: animalmodel.id, status: !animalmodel.isSold));
+                      if(!animalmodel.isSold){
+                        BlocProvider.of<HomeBloc>(context).add(HomeEventAdoptAnimal(id: animalmodel.id, status: !animalmodel.isSold));
+                        BlocProvider.of<HistoryBloc>(context).add(HistoryEventAddAnimal(animalModel: animalmodel));
+                        showDialog(context: context, builder: (context){
+                          return AlertDialog(
+                            title: Text('Congratulations! You have adopted ${animalmodel.name}. Please check history section for adopted list.'),
+                            titleTextStyle: appTextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.black),
+                            actions: [
+                              TextButton(onPressed: (){
+                                Navigator.pop(context);
+                              }, child: Text('Ok',style: appTextStyle(fontWeight: FontWeight.bold, fontSize: 12,color: Colors.teal),))
+                            ],
+                          );
+                        });
+                      }
+
                     },
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 8),
@@ -167,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                           color: animalmodel.isSold? Colors.grey : Colors.black
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 12),
-                        child: Text( animalmodel.isSold? 'Release me' :'Adopt me',style: appTextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.white),),
+                        child: Text( animalmodel.isSold? 'Already adopted' :'Adopt me',style: appTextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.white),),
                       ),
                     ),
 

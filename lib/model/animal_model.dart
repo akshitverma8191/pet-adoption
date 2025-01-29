@@ -9,6 +9,7 @@ class AnimalModel {
   late bool isSold;
   late final double distance;
   late final String imageUrl;
+  int? epoch;
 
   AnimalModel(Map data){
     id = data['id'];
