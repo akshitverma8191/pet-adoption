@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:petadoption/core/constants/asset_images.dart';
+import 'package:petadoption/core/route/routes.dart';
+
+import '../utils/text_style_helper.dart';
 
 
 
@@ -25,15 +27,17 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             const Expanded(child: SizedBox()),
             Image.asset(AssetImages.paw,width: size.width * 0.6,),
-            Text('Choose Pets',style: GoogleFonts.poppins(fontSize: 42,fontWeight: FontWeight.bold),),
-            Text('Find your perfect pet companion',style: GoogleFonts.poppins(fontSize: 12,fontWeight: FontWeight.w400),),
+            Text('Choose Pets',style: appTextStyle(fontSize: 42,fontWeight: FontWeight.bold),),
+            Text('Find your perfect pet companion',style: appTextStyle(fontSize: 12,fontWeight: FontWeight.w400),),
             Expanded(child: SizedBox(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   InkWell(
-                    onTap: (){},
+                    onTap: (){
+                      Navigator.pushReplacementNamed(context, Routes.homePage);
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -48,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
                            child: Image(image: AssetImage(AssetImages.paw),color: Colors.white,width: 24,),
                           ),
                           const SizedBox(width: 8,),
-                          Text('Get Started',style: GoogleFonts.poppins(fontSize: 18,fontWeight: FontWeight.w600),)
+                          Text('Get Started',style: appTextStyle(fontSize: 18,fontWeight: FontWeight.w600),)
                         ],
                       ),
                     ),
